@@ -1,0 +1,6 @@
+= Idling Resource [TBD]
+
+////
+ * 應該做個實驗，indicator 在轉時找不到，加了 idling resource 就可以，但如果想要馬上按 back 呢?
+////
+

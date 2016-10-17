@@ -1,0 +1,6 @@
+= Espresso 學習筆記
+
+Espresso 是一個測試框架 (testing framework)，提供模擬使用者操作及驗證結果的 API，方便撰寫 UI 測試以確保使用者 UI 操作不會有非預期的結果。
+
+Espresso 基於 link:instrumented-tests.adoc[instrumentation]，適用於單一 (target) app 內的 UI 自動化測試，可以執行在 Android 2.2 (API level 8) 以上的環境。
+

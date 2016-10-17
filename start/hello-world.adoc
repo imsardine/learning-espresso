@@ -1,0 +1,10 @@
+= Hello, World! [TBD]
+
+由於 Espresso 的官方文件已經相當充足，這份文件就暫時寫到這裡。開發環境安裝設定完成後，依序看過下面幾份文件，對 Espresso 就有基本的瞭解了：
+
+ 1. 由於 Espresso 比較偏白箱測試，如果之前沒有開發過 Android app 的經驗，建議跟著 https://developer.android.com/training/basics/firstapp/index.html[Building Your First App] 做過一次。
+ 2. https://developer.android.com/training/testing/ui-testing/espresso-testing.html[Testing UI for a Single App]
+ 3. https://google.github.io/android-testing-support-library/docs/espresso/basics/index.html[Espresso basics] (搭配 https://github.com/googlesamples/android-testing/tree/master/ui/espresso/BasicSample[android-testing/ui/espresso/BasicSample])
+
+// 先執行過 BasicSample，再加上 Hello, World! ... 或許就叫 BasicSample 就好，就有好多東西可以說了 https://developer.android.com/training/basics/firstapp/index.html 說明怎麼從無到有加上測試?
+

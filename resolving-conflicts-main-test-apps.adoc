@@ -1,0 +1,16 @@
+= 解決 main app 跟 test app 間相依性的衝突
+
+衝突要掌握的大原則是，以 main app 為主。
+
+.(main) app 用的版本比較新
+----
+Conflict with dependency 'com.android.support:support-annotations'. Resolved versions for app (24.0.0) and test app (23.3.0) differ. See http://g.co/androidstudio/app-test-app-conflict for details.
+----
+
+.(main) app 用的版本比較舊
+----
+Conflict with dependency 'com.google.code.findbugs:jsr305'. Resolved versions for app (1.3.9) and test app (2.0.1) differ. See http://g.co/androidstudio/app-test-app-conflict for details.
+----
+
+用 `./gradlew :app:dependencies --configuration compile` 及 `./gradlew :app:dependencies --configuration androidTestCompile` 分別查看 main app 及 test app 的 dependency tree。
+

@@ -1,0 +1,114 @@
+= Summary
+
+ * link:README.adoc[前言]
+ * link:start/README.adoc[新手上路]
+   ** link:start/setup.adoc[安裝設定]
+   ** link:start/hello-world.adoc[Hello, World!]
+   ** link:start/hamcrest-quick-start.adoc[Hamcrest 速成]
+ * link:idling-resources/README.adoc[Idling Resource]
+ * link:webviews/README.adoc[WebView]
+ * link:mix-uiautomator.adoc[混用 Espresso 與 UI Automator]
+ * link:resolving-conflicts-main-test-apps.adoc[附錄：解決 main app 跟 test app 間相依性的衝突]
+ * link:test-recorder.adoc[Test Recorder]
+ * link:page-objects/README.adoc[Page Object Pattern]
+ * link:instrumented-tests.adoc[附錄：Instrumented Tests]
+
+////
+TBD:
+
+ * 如何解決 main app 與 test app 的衝突? 以 main app 為主
+ * 什麼是 instrumentation，兩個 APK 在同一個 process 裡，要用相同的 code sign
+ * 要如何知道 Espresso 的 dependency 有哪些版本可以用? => 看 local repository
+ * 對 Hamcrest 要先知道怎麼用 matchers
+ * https://www.youtube.com/watch?v=isihPOY2vS4 有許多實用的建議；不要取 view、不要做 deep navigation、hermetic、利用 Espresso Intents 做跨 app 的測試、處理動畫...
+ * 偶爾也需要自訂 matcher
+
+疑問：
+
+ * 跟 UI Automator 混用，仔細想想，是不是 anti-pattern?? 因為 intent ...
+ * Espresso 預設會在每次執行時送出 package name 做為統計；可以傳 `disableAnalytics "true"` 來停用；實際上要怎麼做? 透過 `testInstrumentationRunnerArguments`??
+ * 為什麼 `com.android.support.test:rules` 底下的 `junit:junit` 排除不掉?? JUnit 的 dependency 是不是應該要提出來??
+ * Espresso 裡如何做螢幕轉向? 搭配 UI Automator??
+ * 用 activity 來做畫面的好處是方便測試?? 直接調用某個畫面?
+ * 沒有加 `@RunWith(AndroidJUnit4.class)` 會怎樣??
+ * 自動協調 testing 與 main UI thread 的機制?? 什麼是 idle?
+ * 當 target app 放到背景時，espresso 的操作會出現什麼錯誤??
+ * 開發時建議用 hierarchy viewer，但只能在 emulator 上運作??
+ * 覺得還是沒能完全掌握 idling resources?? 尤其有人為 OkHttp 寫了 idling resource https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html
+ * Test recorder 的用法?? 時機??
+ * 想把 Espresso TestLib 整個包裝成 AAR，Log 的 TAG 也要統一?? https://developer.android.com/studio/projects/android-library.html[Create an Android Library | Android Studio]
+ * Espresso 要怎麼抓取文字資料，像比對歌名??
+ * 為現有的專案加上 Espresso Test?? 並排除 dependency 的衝突??
+ * 跟 instrumented unit tests 混在 androidTest 裡，要怎麼不互相干擾?? => 分 size?
+ * Espresso 如何檢查 toast??
+ * Espresso 如何切換語系??
+ * 錯誤時可以額外抓 adb bug report 嗎??
+ * Espresso 沒有 keyword layer，之後維護很難看出 scenario，該導入 Cucumber 嗎??
+ * 測試同時在多台裝置上執行，要如何避免測試間相互影響??
+ * Espresso 如何做 failure handling (FailureHandler)??
+ * Espresso 如何在測試前、中清空資料?? (或許不用 JUnit 4 Rule 把 main activity 叫起來就好)
+ * 研究一下要怎麼擴充 Espresso API，或許很多事情都可以在那找到答案??
+ * Espresso 的 API 很複雜，要花時間一一看過 (包括非核心的部份)??
+ * 如何做跨 App 的測試 (搭配 Espresso-Intents 做 Hermetic inter-app testing)?? https://docs.google.com/presentation/d/1bPE0HbKIUQn-SAWfLBFcRz3aJwjgEUr8gKGhLJgDxRo/edit#slide=id.g76bf114f5_2_304
+ * Espresso 如何做 tagging (除 small、medium、large 之外) => Test filtering?? 但這好像跟 Espresso 無關?
+
+教程規劃：
+
+ * 沒有 source code 也可以用 Espresso？
+ * 走過所有的範例程式
+ * Page Object Pattern (用 BasicSample 說明即可，有兩個頁面)
+
+ * UI Testing 有哪些選擇，考量的點有哪些?? 選擇多 ~ ASTL
+ * 環境設置 - 安裝 Android Support Repository (maven) 內含 ASTL、關閉動畫效果。
+ * 知道有哪些版本可以用
+ * 用 Hello, World! 帶出基本的寫法，但 AUT 要用哪一個? => Google sample code；怎麼在 AUT 上加上測試
+ * 出錯時要如何抓取 crash log?
+ * Espresso 跟 ATSL 的關係
+ * API 導覽
+ * 手邊有兩個 APK，怎麼用 am instrument ... 執行測試?
+ * 需要 screenshot、美美的 report 時再帶出 Spoon
+ * Idling resources 有點難懂
+ * 最後再帶出 Page Object Pattern
+ * Conditional flow 如何處理?
+ * 放上 Cloud Test Lab 執行
+ * 如何拍圖
+ * Adapter/Recycler View 的處理 - onData()
+ * WebView
+ * 如何在測試中間清 app data
+ * 有一個列表要逐項處理，例如勾選數個 checkbox
+ * 如何產出 xUnit report
+ * 如何解鎖? (目前從設定裡直接停用)
+ * 螢幕轉向
+ * 動畫的處理
+ * 產生 code coverage
+ * Espresso 跟 UI Automator 要怎麼做選擇? 可以混用，但適用的狀況分別為何?
+ * CI Integration + Spoon + emulators?
+
+常有要不要倒回去用 UI Automator 的爭議：
+
+ * 支援 WebView
+ * 不用等待、捲動方便，這是 flakiness 最大的來源
+ * 可驗證的資料很細微，隔著一層 accessibility 能看的東西有限
+ * 可以從 `R.string` 直接取字串，方便多國語言的測試。
+ * 可以做 accessibility 檢查? (AccessibilityChecks)
+ * 別忘了 UI Automator 2.0 已經可以跟 Espresso 混用，
+
+感覺使用 Espresso 有些實務可以提出來分享：
+
+ * 不用管要不要等，就一直 `onView().perform().check()`，發現有問題時再來看要不要加 idling resource。
+
+在一般 QA 身上看到的一些問題：
+
+ * 像個 Java developer，naming conventions、generics、exception handling
+ * 測試資料不用抽出到 class 上方，這樣 case 反而不好讀
+ * Conflict with dependency 'com.android.support:support-annotations'. Resolved versions for app (21.0.3) and test app (23.0.1) differ. See http://g.co/androidstudio/app-test-app-conflict for details. 這類問題正規的解決方式? 原因應該是 runtime 會執行在同一個 process 裡?
+
+## ViewMatcher
+
+ * 瞭解過 Hamcrest matcher，再看 `ViewMatchers` 怎麼搭配 `org.hamcrest.Matchers.*` 使用，例如 `allOf`、`anyOf`、`not` 等。
+ * 為什麼 `ViewMatchers` 裡還有 `assertThat`? "A replacement for MatcherAssert.assertThat that renders View objects nicely." 用在什麼地方? 大概只有在實作 [`ViewAssertion`](http://www.programcreek.com/java-api-examples/index.php?source_dir=RxRecyclerView-master/app/src/androidTest/java/com/exallium/rxrecyclerview/app/RecyclerViewAssertions.java) 時吧??
+ * 實作 matcher 時，description 實際上的效果是什麼??
+ * matcher 是怎麼轉成 `ViewAssertion` 的?? => `ViewAsserts.matches(matcher)`
+ * 自訂 matcher 時的 `matchesSafely(item)` 似乎有機會拿到 `View`?? 如何拿到一系列清單的文字??
+////
+
