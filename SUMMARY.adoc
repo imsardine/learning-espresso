@@ -8,14 +8,20 @@
  * link:idling-resources/README.adoc[Idling Resource]
  * link:webviews/README.adoc[WebView]
  * link:mix-uiautomator.adoc[混用 Espresso 與 UI Automator]
- * link:resolving-conflicts-main-test-apps.adoc[附錄：解決 main app 跟 test app 間相依性的衝突]
  * link:test-recorder.adoc[Test Recorder]
  * link:page-objects/README.adoc[Page Object Pattern]
+ * link:howtos/README.adoc[HOWTOs]
+   ** link:howtos/keep-devices-awake-during-test.adoc[讓測試裝置在測試期間保持清醒]
+ * link:troubleshooting/README.adoc[疑難排解]
+   ** link:troubleshooting/no-activities-in-stage-resumed.adoc[No activities in stage RESUMED]
  * link:instrumented-tests.adoc[附錄：Instrumented Tests]
+ * link:resolving-conflicts-main-test-apps.adoc[附錄：解決 main app 跟 test app 間相依性的衝突]
 
 ////
 TBD:
 
+ * 介紹幾個 API - `ViewMatcher`、`ViewAction` 及 `ViewAssertion`，不過是這幾個 API 串來串去
+ * `onView` 名稱上給人的誤解，好像有 when ... 的意思，但其實是在建立搜尋條件
  * 如何解決 main app 與 test app 的衝突? 以 main app 為主
  * 什麼是 instrumentation，兩個 APK 在同一個 process 裡，要用相同的 code sign
  * 要如何知道 Espresso 的 dependency 有哪些版本可以用? => 看 local repository
@@ -25,13 +31,32 @@ TBD:
 
 疑問：
 
+ * To simplify test development, you should use the Hamcrest library 這句話應該是針對 UI Automator 吧?? 只是 Espresso 習慣用 Hamcrest 而已?? (https://developer.android.com/training/testing/start/index.html) 都是丟出 AssertionException
+ * 沒有加 `@RunWith(AndroidJUnit4.class)` 會怎樣? => 結果不加 `cAT` 的測試也正常!?? ... instrumentation runner 跟 JUnit runner 應該是不同的??
+ * have no Android framework dependencies or when you can mock the Android framework dependencies. 看起來 Android dependency 是可以 mock 的?? 若真如此，又為何要有 instrumented unit test? 什麼情況下會無法 mock?? 如果是這樣，那 Robolectric 的定位是什麼?? 若可以抽離 ... 根本用不到 Robolectric 啊...
+ * 之前完全沒看過 component integration test ??
+ * 如果要看元件型態決定 `onView()`、`onData()`，要懂一些程式才行?? 又 `RecyclerView` 好像不是用 `onData()`??
+ * 將測試裝置的動畫效果關閉 (包括模擬器)；如果是自動建立的 emulator，要怎麼做到這件事??
+ * 如何處理捲動?? 什麼時候要呼叫 scrollTo? (在 ScrollView 裡時，但如果不在 scroll view 裡會怎樣?) 什麼時候又不用 (例如 onData())
+ * 若測試要跑在 cloud service，應該在 local 端先將 test APK 編出來，連同 app APK 一起送上? 這必須瞭解 `./gradlew connectedAndroidTest` 後面做了什麼事才行??
+ * 混用 Espresso 與 UI Automator 時，已知一個問題是 minSDK 的檢查會過不了經遇到 如何避開這個限制?? => 自訂 `src/androidTest/AndroidManifest.xml`
++
+----
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="${applicationId}">
+    <uses-sdk tools:overrideLibrary="android.support.test.uiautomator.v18"/>
+</manifest>
+----
++
+ * Espresso 會自動在 test actions 跟 app UI 之間做 synchronization - 在 main thread 真的 idle 時才做動作，可以增加測試的可靠度。為什麼這樣就可以免去 timing workaround (例如 sleep)，某些情況還是得要等某個東西出現或消失不是??
+ * 自動協調 testing 與 main UI thread 的機制?? 什麼是 idle? 規則有哪些例外?? AsyncTask 會不會形成限制??
  * 跟 UI Automator 混用，仔細想想，是不是 anti-pattern?? 因為 intent ...
  * Espresso 預設會在每次執行時送出 package name 做為統計；可以傳 `disableAnalytics "true"` 來停用；實際上要怎麼做? 透過 `testInstrumentationRunnerArguments`??
- * 為什麼 `com.android.support.test:rules` 底下的 `junit:junit` 排除不掉?? JUnit 的 dependency 是不是應該要提出來??
+ * JUnit 是 `com.android.support.test:runner` 的 transitive dependency (可以用 `./gradlew -q app:dependencies --configuration androidTestCompile` 查看) 測試碼有用到，為什麼不明確引用?? 為什麼 `com.android.support.test:rules` 底下的 `junit:junit` 排除不掉?? JUnit 的 dependency 是不是應該要提出來??
  * Espresso 裡如何做螢幕轉向? 搭配 UI Automator??
  * 用 activity 來做畫面的好處是方便測試?? 直接調用某個畫面?
- * 沒有加 `@RunWith(AndroidJUnit4.class)` 會怎樣??
- * 自動協調 testing 與 main UI thread 的機制?? 什麼是 idle?
  * 當 target app 放到背景時，espresso 的操作會出現什麼錯誤??
  * 開發時建議用 hierarchy viewer，但只能在 emulator 上運作??
  * 覺得還是沒能完全掌握 idling resources?? 尤其有人為 OkHttp 寫了 idling resource https://google.github.io/android-testing-support-library/docs/espresso/idling-resource/index.html

@@ -1,0 +1,12 @@
+= 在測試開始前喚醒測試裝置 [TBD]
+
+測試期間要讓裝置保持清醒，否則 UI 測試link:../troubleshooting/no-activities-in-stage-resumed.adoc[無法進行]。比較好的解法是透過程式讓測試裝置在測試前開啟螢幕，或是在測試期間保持清醒；有幾種做法：
+
+ * 模擬按下 Home 鍵，讓螢幕開啟。
+ * 透過 API 在測試之前喚醒測試裝置。
+ * 透過 API 讓裝置在整個測試期間保持清醒。
+
+透過 `adb shell input keyevent 3` 按下 Home 鍵 (https://developer.android.com/reference/android/view/KeyEvent.html#KEYCODE_HOME[`KEYCODE_HOME`])，讓螢幕開啟。
+
+用 ADB command 固然可行，但可能之後上雲端時就行不通了?
+

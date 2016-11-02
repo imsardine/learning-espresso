@@ -1,6 +1,7 @@
-= 解決 main app 跟 test app 間相依性的衝突
+= 解決 main app 跟 test app 間相依性的衝突 [TBD]
 
-衝突要掌握的大原則是，以 main app 為主。
+ * 並用 Espresso 與 UI Automator 時，極可能遇到 `minSdkVersion` 比 UI Automator 要求的 16 還低的問題。
+ * 衝突要掌握的大原則是，以 main app 為主；最常發生在 `com.android.support:support-annotations`。
 
 .(main) app 用的版本比較新
 ----

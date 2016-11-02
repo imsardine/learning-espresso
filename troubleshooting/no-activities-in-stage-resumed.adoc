@@ -1,0 +1,48 @@
+= No activities in stage RESUMED
+
+----
+$ ./gradlew connectedAndroidTest
+...
+
+android.support.test.espresso.NoActivityResumedException: No activities in stage RESUMED. Did you forget to launch the activity. (test.getActivity() or similar)?
+at dalvik.system.VMStack.getThreadStackTrace(Native Method)
+...
+----
+
+這個錯誤是因為測試期間手機沒有解鎖 (unlocked) 或螢幕沒有打開 (awake) 的關係。用 `am instrument` 可以看到完整的錯誤：
+
+----
+$ adb shell am instrument -w -r com.example.android.testing.espresso.BasicSample.test/android.support.test.runner.AndroidJUnitRunner
+...
+
+android.support.test.espresso.NoActivityResumedException: No activities in stage RESUMED. Did you forget to launch the activity. (test.getActivity() or similar)?
+        at dalvik.system.VMStack.getThreadStackTrace(Native Method)
+        at java.lang.Thread.getStackTrace(Thread.java:580)
+        at android.support.test.espresso.base.DefaultFailureHandler.getUserFriendlyError(DefaultFailureHandler.java:92)
+        at android.support.test.espresso.base.DefaultFailureHandler.handle(DefaultFailureHandler.java:56)
+        at android.support.test.espresso.ViewInteraction.runSynchronouslyOnUiThread(ViewInteraction.java:184)
+        at android.support.test.espresso.ViewInteraction.doPerform(ViewInteraction.java:115)
+        at android.support.test.espresso.ViewInteraction.perform(ViewInteraction.java:87)
+        at com.example.android.testing.espresso.BasicSample.ChangeTextBehaviorTest.changeText_sameActivity(ChangeTextBehaviorTest.java:72)
+        at java.lang.reflect.Method.invoke(Native Method)
+        at java.lang.reflect.Method.invoke(Method.java:372)
+        at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:50)
+        at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+        at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:47)
+        at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+        at android.support.test.internal.statement.UiThreadStatement.evaluate(UiThreadStatement.java:55)
+        at android.support.test.rule.ActivityTestRule$ActivityStatement.evaluate(ActivityTestRule.java:270)
+...
+----
+
+螢幕鎖定的問題，通常就是從設定裡將 screen lock 設為 None 即可，另一個問題則要在測試期間讓測試裝置保持清醒 (awake)。
+
+最簡單的方式是開啟 Settings > Developer options > Stay awake (Screen will never sleep while charging) 的設定；為了避免損傷螢幕，建議一併將螢幕亮度也調到最低。
+
+不過上述的做法有幾個問題：
+
+ * 長時間開著螢幕，可能會縮短螢幕壽命。
+ * 測試裝置的螢幕可能因為某種原因而被關閉，需要人為介入處理，尤其在無人看管 (unattended) 的環境，這個問題會很困擾。
+
+比較好的解法是透過程式讓測試裝置在測試前開啟螢幕，或是在測試期間保持清醒。實作的細節可以參考 link:../howtos/keep-devices-awake-during-test.adoc[讓測試裝置在測試期間保持清醒]。
+

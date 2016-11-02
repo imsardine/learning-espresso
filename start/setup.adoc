@@ -3,7 +3,7 @@
 使用 Espresso 的準備工作有：
 
  * 安裝 Android Support Library
- * 關閉裝置的動畫效果
+ * 調整測試裝置的設定
  * 調整 build file
 
 == 安裝 Android Support Library
@@ -44,9 +44,15 @@ extras/android/m2repository/com/android/support/test/uiautomator/
 1 directory, 0 files
 ----
 
-注意 `rules/`、`runner/`、`uiautomator-v18/` 及 `espresso-*/` 這些套件的位置。
+注意 `rules/`、`runner/`、`uiautomator-v18/` 及 `espresso-*/` 這些套件的位置，之後可能會用到。
 
-== 關閉裝置的動畫效果
+== 調整測試裝置的設定
+
+ * 取消螢幕鎖定。
+ * 關閉動畫效果。
+ * 讓測試裝置保持清醒。
+
+螢幕鎖定會讓 UI 測試無法進行，將 Settings > Security > Screen lock 設定為 None 即可。
 
 動畫效果可能會讓 UI 測試變得不穩定 (flaky)，建議將測試裝置的動畫效果關閉 (包括模擬器)。在 Settings > Developer options > Drawing 將下面 3 個選項都改為 Animation off 即可：
 
@@ -55,6 +61,8 @@ extras/android/m2repository/com/android/support/test/uiautomator/
  * Animator duration scale
 
 image::../images/animation-settings.png[]
+
+最後一點則要讓測試裝置保持清醒 (至少在測試期間)，否則 UI 測試也無法進行。最簡單的方式是開啟 Settings > Developer options > Stay awake (Screen will never sleep while charging) 的設定 (為了避免損傷螢幕，建議一併將螢幕亮度也調到最低)，更多細節可以參考link:../troubleshooting/no-activities-in-stage-resumed.adoc[這裡]。
 
 == 調整 Build File ==
 
@@ -157,7 +165,7 @@ image::../images/atsl-versioning.png[]
 image::../images/uiautomator-versioniong.png[]
 --
 
-也就是說可以根據 release note 知道 Espresso 所有已釋出的版本，Espresso 版號旁邊也會伴隨著新的 runner 及 rules 版號 (也就是 ATSL 的版號)。
+也就是說可以根據 release note 知道 Espresso 所有已釋出的版本，旁邊也會伴隨著新的 runner 及 rules 版號 (也就是 ATSL 的版號)。
 
 至於 `hamcrest-library` 的版本，在 Espresso 2.2 / ATSL 0.3 (2015-06-09) 已經換成最新的 Hamcrest 1.3，短時間內應該也不會有新的版本可用。(Hamcrest 1.3 早在 2012-07-10 釋出，之後就再沒有新版了)
 
